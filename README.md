@@ -51,4 +51,54 @@ Furthermore, the algorithm is very simple and easy to implement, as it requires 
 
 The algorithm is also extremely memory and time efficient if you are using a closed form curve as your path, like a Bezier curve, as you are not required to pre generate the points on the path before starting the motion algorithm, like you do with some algorithms like motion profiling. The only thing the algorithm needs is the derivative of the Bezier curve at a constant point (the end), and the closest point to the robot on the Bezier curve, and its derivative. This information can all be retrieved in O(1) time, as it goes along the curve using the closed form solution, meaning we can save tons of time and memory. 
 
+However, you may have noticed that there is a small little edge case. What if the carrot point gets generated behind the robot’s current point?
+![Edge Case](Images/EdgeCase.png)
+
+To fix this edge case, we would simply have to lerp the carrotPoint over to the other side by using a lerping factor of -1. By Lerp, I mean to linearly interpolate. 
+
+To know whether the point was generated behind our robot or not, we can simply take the sign of the dot product of the tangentVector (red arrow) and the blue arrow (closestPoint – original-Intersection-Point). If the result is negative, the carrot point is generated behind the root, and thus we need to lerp by -1; if it was positive, the point generation is perfectly fine and we don’t need to do anything. 
+
+# Cross Track Error Minimzation
+
+To take this algorithm to the next level, we need a way to minimize cross track error. Unlike some other algorithms like standard pure pursuit, by adding a method like this, we can get our robot to not only follow the general shape of the path, but accurately be on top of the path while doing so. 
+
+To do this, we simply find the signed cross track error E_c, and rotate the line tangent to the closet point on the curve by an angle proportional to the signed cross track error. 
+
+There are many ways you can do this, the way the code above finds the angle to rotate the line is through this formula: k * E_c / R. In this formula, k is a constant, E_c is the signed cross track error, and R (or 1/R) is the radius/curvature of the closest point (this is not too important, as you can add other methods of scaling down angular and linear velocity with tight turns). The rotation is proportional to E_c, since the bigger it is, the more we want to turn towards the path, and radius is inversely proportional, since we can't turn as much when the turn radius is too small. 
+
+
+**Without cross track minimization:** 
+Even though the robot will roughly follow the direction of the curve, you can see that it won’t be able accurately do so, as it is pretty far from the path. 
+![No Cross Track Error Correction](Images/NoXTECorrection.png)
+
+**With cross track minimzation**
+As you can see, by rotating the line, we make the carrot point further from the robot. Thus, the robot’s angular power is increased, driving it closer to the curve. You can also see this property in the image below. The robot’s trajectory is forced in the direction of the curve, effectively minimizing cross track error. 
+
+Red dashed line is the original line. The Green Line is the new line after rotating by the cross track correction angle. E_c is the signed cross track error. And the purple arrow is the new trajectory of the robot. The point labeled “new carrot point” is the current dynamically generated carrot point the robot will attempt to move to.  
+![With Cross Track Error Correction](Images/XTECorrectionDocumented.png)
+
+To find absolute value of the cross-track error, we simply take the distance from the robot’s position, to the closet point on the line. 
+
+To find the sign of the cross-track error, we take the sign of the tangent vector crossed with the cross track distance vector (illustrated below)
+![Sign of cross track error correction](Images/SgnOfXTE.png)
+
+To rotate the line by an angle proportional to E_c to minimize cross track error, I use the rotation matrix.
+
+# Following the Path And Extra Notes: 
+If it wasn’t already obvious, the carrot point that our robot attempts to move to is found by the intersection of the closest point line after being rotated to account for cross track error and the tangent line at the end point of the curve. 
+
+To move to the point, we can take the angular and distance error of our robot to the carrot point, and put those values into an angular and lateral PID controller respectively to move the robot to the carrot point.
+Implementations of both are in the repo above. 
+
+Also, if anyone was curious, I am using Newton’s Method to approximate the closest point on the Bezier curve to my robot. My starting guess value is the previous closest value and I have a maximum of 5 iterations to find the closest point. 
+
+For more complex curves, I have a method where I break the cubic Bezier curve into smaller curves, and then I follow each of these broken up curves individually. I break the Cubic Bezier curve in places where the x-derivative or the y-derivative of the curve is equal to 0 (local minima and maxima basically). 
+
+This allows for a more consistent and accurate path following. This is also implemented in the repo above in the splitCurve() method in the CubicBezier class. 
+
+# THANK YOU FOR READING
+Thank you for reading through this! If there are any errors or questions please feel free to email me or message me. 
+
+
+
 
