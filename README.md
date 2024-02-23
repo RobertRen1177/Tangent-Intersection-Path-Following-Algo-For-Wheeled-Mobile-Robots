@@ -1,1 +1,1 @@
-#Tangent-Intersection-Path-Following-Algo-For-Wheeled-Mobile-Robots
+# Tangent-Intersection-Method-For-Path-Following
