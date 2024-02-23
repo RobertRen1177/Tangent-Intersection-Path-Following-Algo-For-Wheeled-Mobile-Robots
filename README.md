@@ -8,9 +8,7 @@ Now here’s the actual algorithm explained:
 Note: in my explanation I use a Cubic Bezier curve as the path to follow. 
 
 1. Given the curve B(X), we find the line tangent to the very last point on this curve. This line will be called line_endingPointTangent. 
-
 ![First Step Of Algorithm](Images/Step1.png)
-
 2.	Given our robot's current position (x_start, y_start), we find the point that we are closest to on the curve B(X). This point is called (x_closest, y_closest).
 ![Second Step Of Algorithm](Images/Step2.png)
 3.	We then find the line tangent to (x_closest, y_closest), called line_closestPointTangent
@@ -33,6 +31,7 @@ And the carrot point is at the intersection of the green and red lines.
 The following images show more carrot points as the robot moves along the curve.
 ![Extra Steps Modeled](Images/MoreCarrotPoints1.png)
 ![Extra Steps Modeled](Images/MoreCarrotPoints2.png)
+
 This is the Desmos to model this situation: https://www.desmos.com/calculator/axcqmxr9wz (scroll down to the t_c variable for more control)
 As you can see, by following the carrot point created by the intersection of these two lines, the robot naturally follows the curve. It is constantly moving along the derivatives of the curve which means it will follow out the path created by the curve. 
 
