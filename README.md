@@ -11,11 +11,11 @@ Note: in my explanation I use a Cubic Bezier curve as the path to follow.
 
 ![First Step Of Algorithm](Images/Step1.png)
 
-2.	Given our robots current position (x_start, y_start), we find the point that we are closest to on the curve B(X). This point is called (x_closest, y_closest).
+2.	Given our robot's current position (x_start, y_start), we find the point that we are closest to on the curve B(X). This point is called (x_closest, y_closest).
 ![Second Step Of Algorithm](Images/Step2.png)
 3.	We then find the line tangent to (x_closest, y_closest), called line_closestPointTangent
 ![Third Step Of Algorithm](Images/Step3.png)
-4.	We then find the signed cross track error of our robot to the curve. We then rotate the line_closetPointTangent by an angle proportional to the signed cross track error to minimize cross track error. (This step is not illustrated above as it is explained in greater later in the document)
+4.	We then find the signed cross track error of our robot to the curve. We then rotate line_closetPointTangent by an angle proportional to the signed cross track error to minimize this error so our robot can accurately be on top of the path. (This step is not illustrated above as it is explained in greater detail later in the document)
 5.	The intersection point between the two lines is the carrot point that our robot attempts to follow. 
 ![Fifth Step Of Algorithm](Images/Step5.png)
 6.	We calculate our angular and linear power needed to move to the carrot point and we then input them to the control system. 
