@@ -32,7 +32,7 @@ The following images show more carrot points as the robot moves along the curve.
 ![Extra Steps Modeled](Images/MoreCarrotPoints1.png)
 ![Extra Steps Modeled](Images/MoreCarrotPoints2.png)
 
-This is the Desmos to model this situation: https://www.desmos.com/calculator/axcqmxr9wz (scroll down to the t_c variable for more control)
+This is the Desmos to model this situation, made by [SecretAgent](https://github.com/SecretAgent-YT) https://www.desmos.com/calculator/axcqmxr9wz (scroll down to the t_c variable for more control)
 As you can see, by following the carrot point created by the intersection of these two lines, the robot naturally follows the curve. It is constantly moving along the derivatives of the curve which means it will follow out the path created by the curve. 
 
 Furthermore, it is extremely hard for the robot to stray away from the curve, as the robot is mathematically bounded by the ending point tangent line. In other words, due to the nature of carrot point generations, the robot is always behind the carrot point. And since the carrot points are all generated on the ending point tangent line, the robot will always be below the ending point tangent line (which means  it is bounded below the tangent line). This means that the robot will always be in the region below the ending point tangent line, which allows for more consistency, since you are guaranteed to be in a specific region while and after traversing the path. 
